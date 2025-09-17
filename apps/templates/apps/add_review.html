@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Review</title>
+</head>
+<body>
+  <h1>Add Review for {{ app.name }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    <textarea name="text" rows="5" cols="40" placeholder="Write your review..."></textarea><br>
+    <button type="submit">Submit</button>
+  </form>
+  <p><a href="{% url 'apps:app_detail' app.id %}">Back to app</a></p>
+</body>
+</html>

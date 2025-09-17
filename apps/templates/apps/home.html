@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Play Search</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    .suggestions { border: 1px solid #ccc; max-width: 300px; }
+    .suggestions div {
+      padding: 6px; cursor: pointer;
+    }
+    .suggestions div:hover { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <h1>Google Play Store Search</h1>
+  <form action="{% url 'apps:search_results' %}" method="get">
+    <input type="text" id="search-box" name="q" placeholder="Search apps..." autocomplete="off">
+    <button type="submit">Search</button>
+  </form>
+
+  <div id="suggestions" class="suggestions"></div>
+
+  <script>
+    $(document).ready(function() {
+      $("#search-box").keyup(function() {
+        let query = $(this).val();
+        if (query.length >= 3) {
+          $.get("{% url 'apps:suggest_apps' %}", {q: query}, function(data) {
+            let results = data.results;
+            let suggestionsBox = $("#suggestions");
+            suggestionsBox.empty();
+            results.forEach(function(item) {
+              suggestionsBox.append("<div>" + item + "</div>");
+            });
+
+            $(".suggestions div").click(function() {
+              $("#search-box").val($(this).text());
+              suggestionsBox.empty();
+            });
+          });
+        } else {
+          $("#suggestions").empty();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

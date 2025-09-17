@@ -1,0 +1,17 @@
+<h1>{{ app.name }}</h1>
+<p><strong>Category:</strong> {{ app.category }}</p>
+<p><strong>Rating:</strong> {{ app.rating }}</p>
+
+<h2>Reviews:</h2>
+{% if reviews %}
+    <ul>
+    {% for review in reviews %}
+        <li>
+            <strong>{{ review.user.username }}</strong>: {{ review.content }}
+            <em>({{ review.created_at }})</em>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}

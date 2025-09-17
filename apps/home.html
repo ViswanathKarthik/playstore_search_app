@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Play Search</title>
+</head>
+<body>
+    <h1>Search Apps</h1>
+    <form action="{% url 'apps:search_results' %}" method="get">
+        <input type="text" name="q" placeholder="Search..." />
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>
