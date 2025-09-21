@@ -22,13 +22,22 @@ def suggest_apps(request):
 
 # Search results page
 def search_results(request):
-    query = request.GET.get("q", "").strip()
+    query = request.GET.get('query', '')
     results = []
-    if query:
-        results = App.objects.filter(
-            Q(name__icontains=query) | Q(category__icontains=query)
-        )
-    return render(request, "apps/search_results.html", {"results": results, "query": query})
+
+    if query and len(query) >= 2:  # minimum 2 chars
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT id, app, rating, reviews_int
+                FROM apps
+                WHERE app ILIKE %s
+                ORDER BY rating DESC, reviews_int DESC
+                LIMIT 10
+            """, [f"%{query}%"])
+            results = cursor.fetchall()
+
+    return render(request, 'apps/search_results.html', {'results': results, 'query': query})
+
 
 
 # App detail page with reviews
@@ -60,3 +69,4 @@ def add_review(request, app_id):
             )
             return redirect("apps:app_detail", app_id=app.id)
     return render(request, "apps/add_review.html", {"app": app})
+
